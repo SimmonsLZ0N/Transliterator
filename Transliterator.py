@@ -1,4 +1,4 @@
-#Das Programm wurde in Python entworfen, hier seht ihr die aktuellste Version
+#Das Programm wurde in der Programmiersprache Python entworfen, hier seht ihr die aktuellste Version
 #In den grünen Kommentaren findet ihr jeweils eine Erklärung, was die Zeile Code darüber macht und in Klammern den jeweiligen Fachbegriff (falls ich ihn kenne)
 from curses.ascii import islower
 import re
