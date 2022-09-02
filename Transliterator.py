@@ -10,7 +10,7 @@ Austauschliste = {"ch":"tsch","kh":"ch","ks":"x","zh":"sch","sh":"sch","tz":"z",
 #Diesen Buchstaben oder Silben (Substrings) werden Gegenstücke zugewiesen (in der Form Schlüssel/Key:Wert/Value), durch die sie ersetzt werden -> zB "ch" wird zu "tsch"
 
 def transliterator():
-    #definiert eine Funktion, also ein (eigentlich mathematisches) Konstrukt, dass nach dem Schema: Eingabe -> Macht irgendwas -> Ausgabe funktioniert
+    #definiert eine Funktion, also ein (eigentlich mathematisches) Konstrukt, das nach dem Schema: Eingabe -> Macht irgendwas -> Ausgabe funktioniert
     transliterat = input("Was soll transliteriert werden? ")
     #Speichert die Eingabe in der Variable transliterat
     res = []
