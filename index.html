@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        .header {
+            margin-top: 46px;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        .layout {
+            margin: 20px 0;
+        }
+
+        .code-output {
+            background: #f0f0f0;
+            padding: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center header">
+                    ZON Newsdesk Text Transliterator
+                </h1>
+            </div> 
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="row layout">
+                    <div class="col-2 text-right">
+                        <span>Text:</span>
+                    </div>
+                    <div class="col-10 text-right">
+                        <input width="100%" id="ing-name">
+                    </div>
+                </div>
+                <div class="row layout justify-content-center">
+                    <div class="col-6 text-center">
+                        <button type="button" class="btn btn-primary btn-ings">XML generieren</button>
+                    </div>
+                </div>
+
+                <div class="row layout justify-content-center">
+                    <div class="col-10 text-left code-output">
+                        <span class="xml-output"><code></code></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    const button = document.querySelector('.btn-ings');
+    const nameElem = document.querySelector('#ing-name');
+    const output = document.querySelector('.xml-output code');
+    const replacements = {"ch":"tsch","kh":"ch","ks":"x","zh":"sch","sh":"sch","tz":"z","ts":"z","v":"w","z":"s","shch":"schtsch" };
+    const patterns = {"y$": "i", "y([aeiou])": "j", "([aeiou])s([aeiou])": "ss", "(i)(i)": "j", "i([aeiou])": "j"};
+  
+    button.addEventListener('click', function(){
+        let name =  nameElem.value;
+    
+        let transcribedName = createString(name);
+        output.innerText = transcribedName;
+    })
+
+  function createString (string){
+
+    if (!string) {
+      alert("Bitte einen Text eingeben");
+    } else {
+      let name = string;
+      name = name.toLowerCase();
+      
+      for (const [key, value] of Object.entries(replacements)) {
+        const regex = new RegExp(key, 'g');
+        name = name.replace(regex, value);
+      }
+  
+      if (name.endsWith('ey')) {
+        name = name.replace(/ey$/m, 'ej');
+      }
+
+      for (const [key, value]of Object.entries(patterns)){
+        const regex = new RegExp(key, 'g');
+        name = name.replace(regex, value);
+      };
+
+      nameEnd = name.slice(1);
+      name = name[0].toUpperCase() + nameEnd;
+
+      return name;
+    }
+  }
+});
+    </script>
+  </body>
+</html>
+
