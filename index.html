@@ -1,116 +1,156 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>ZON Transliterator</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        .header {
-            margin-top: 46px;
-        }
 
-        input {
-            width: 100%;
-        }
+<head>
+  <meta charset="UTF-8">
+  <title>ZON Transliterator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style>
+    .header {
+      margin-top: 46px;
+    }
 
-        .layout {
-            margin: 20px 0;
-        }
+    input {
+      width: 100%;
+    }
 
-        .code-output {
-            background: #f0f0f0;
-            padding: 20px;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center header">
-                    ZON Newsdesk Transliterator
-                </h1>
-            </div> 
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <div class="row layout">
-                    <div class="col-2 text-right">
-                        <span>Text:</span>
-                    </div>
-                    <div class="col-10 text-right">
-                        <input width="100%" id="name-input">
-                    </div>
-                </div>
-                <div class="row layout justify-content-center">
-                    <div class="col-6 text-center">
-                        <button type="button" class="btn btn-primary btn-name">Transliterate</button>
-                    </div>
-                </div>
+    .layout {
+      margin: 20px 0;
+    }
 
-                <div class="row layout justify-content-center">
-                    <div class="col-10 text-left code-output">
-                        <span class="name-output"><code></code></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    .code-output {
+      background: #f0f0f0;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="text-center header">
+          ZON Newsdesk Transliterator
+        </h1>
+      </div>
     </div>
-    <script>
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <div class="row layout">
+          <div class="col-2 text-right">
+            <span>Text:</span>
+          </div>
+          <div class="col-10 text-right">
+            <input width="100%" id="name-input">
+          </div>
+        </div>
+        <div class="row layout justify-content-center">
+          <div class="col-6 text-center">
+            <button type="button" class="btn btn-primary btn-name">Transliterate</button>
+          </div>
+        </div>
 
-document.addEventListener("DOMContentLoaded", function(event) {
-    const button = document.querySelector('.btn-name');
-    const nameElem = document.querySelector('#name-input');
-    const output = document.querySelector('.name-output code');
-    const replacements = {"ch":"tsch","kh":"ch","ks":"x","zh":"sch","sh":"sch","tz":"z","ts":"z","v":"w","z":"s","shch":"schtsch"};
-    const patterns = {"y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j"};
-  
+        <div class="row layout justify-content-center">
+          <div class="col-10 text-left code-output">
+            <span class="name-output"><code></code></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+      const button = document.querySelector('.btn-name');
+      const nameElem = document.querySelector('#name-input');
+      const output = document.querySelector('.name-output code');
+      const replacements = { "ch": "tsch", "kh": "ch", "ks": "x", "zh": "sch", "sh": "sch", "tz": "z", "ts": "z", "v": "w", "z": "s", "shch": "schtsch" };
+      const patterns = { "y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j" };
+
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-            let name = nameElem.value;
-        
-        let transcribedName = createString(name);
-        output.innerText = transcribedName;
+          let name = nameElem.value;
+
+          let transcribedName = createString(name);
+          output.innerText = transcribedName;
         }
-    })
-  
-    button.addEventListener('click', function(){
-        let name =  nameElem.value;
-    
+      })
+
+      button.addEventListener('click', function () {
+        let name = nameElem.value;
+
         let transcribedName = createString(name);
         output.innerText = transcribedName;
-    })
+      })
 
-  function createString (string){
+      function createString(string) {
 
-    if (!string) {
-      alert("Bitte einen Text eingeben");
-    } else {
-      let name = string;
-      name = name.toLowerCase();
-      
-      for (const [key, value] of Object.entries(replacements)) {
-        const regex = new RegExp(key, 'g');
-        name = name.replace(regex, value);
+        if (!string) {
+          alert("Bitte einen Text eingeben");
+          return ""
+        } else {
+          let name = string.toLowerCase();
+          let included = {}
+
+          for (const [key, val] of Object.entries(replacements)) {
+            if (name.includes(key)) included[key] = val;
+          }
+
+          for (const [key, value] of Object.entries(included)) {
+            const regex = new RegExp(key, 'g');
+            name = name.replace(regex, value);
+          }
+
+          if (name.endsWith('ey')) {
+            name = name.replace(/ey$/m, 'ej');
+          }
+
+          for (const [key, value] of Object.entries(patterns)) {
+            const regex = new RegExp(key, 'g');
+            name = name.replace(regex, value);
+          };
+
+          nameEnd = name.slice(1);
+          name = name[0].toUpperCase() + nameEnd;
+
+          return name;
+        }
       }
-  
-      if (name.endsWith('ey')) {
-        name = name.replace(/ey$/m, 'ej');
+
+      /// testing accurate transliteration results for test cases ///
+
+      function test_createString() {
+        //inputs based on transliteration table
+        const inputs = {
+          "Kuchma": "Kutschma",
+          "Khvastov": "Chwastow",
+          "Aleksander": "Alexander",
+          "Shoigu": "Schoigu",
+          "Yushchenko": "Juschtschenko",
+          "Yeltsin": "Jelzin",
+          "Filippov": "Filippow",
+          "Alexey": "Alexej",
+          "Yevgeny": "Jewgeni",
+          "Ilya": "Ilja",
+          "Chernobyl": "Tschernobyl",
+          "Kozyrev": "Kosyrew",
+          "Zhirinovsky": "Schirinowski"
+        }
+
+        //will throw an assertion error in the console if createString() result does not match expected transliteration
+        for (const [key, value] of Object.entries(inputs)) {
+          const transliteration = createString(key);
+          console.assert(value === transliteration, `expected: ${value}, function result: ${transliteration}`);
+        }
+        console.log("transliteration test successful")
       }
 
-      for (const [key, value]of Object.entries(patterns)){
-        const regex = new RegExp(key, 'g');
-        name = name.replace(regex, value);
-      };
+      test_createString()
+    });
 
-      nameEnd = name.slice(1);
-      name = name[0].toUpperCase() + nameEnd;
 
-      return name;
-    }
-  }
-});
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
-
