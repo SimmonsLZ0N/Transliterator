@@ -55,6 +55,9 @@
           <div class="col-10 text-left code-output">
             <span class="name-output"><code></code></span>
           </div>
+          <div class="col-6 text-center">
+            <button type="button" class="btn btn-primary btn-name btn-sm" id="copy-button">Copy</button>
+          </div>
         </div>
       </div>
     </div>
@@ -117,6 +120,20 @@
           return name;
         }
       }
+
+      //Copy To Clipboard
+      document.getElementById('copy-button').addEventListener('click', async () => {
+        const copyText = document.getElementById("name-input");
+
+        copyText.select();
+
+        try {
+          await navigator.clipboard.writeText(copyText.value);
+        } catch (error) {
+          console.log(error);
+        }
+
+      })
 
       /// testing accurate transliteration results for test cases ///
 
