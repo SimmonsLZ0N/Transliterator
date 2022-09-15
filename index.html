@@ -53,9 +53,9 @@
 
         <div class="row layout justify-content-center">
           <div class="col-10 text-left code-output">
-            <span class="name-output"><code></code></span>
+            <span class="name-output"><code id="trans-output"></code></span>
           </div>
-          <div class="col-6 text-center">
+          <div class="col-6 text-center layout">
             <button type="button" class="btn btn-primary btn-name btn-sm" id="copy-button">Copy</button>
           </div>
         </div>
@@ -123,12 +123,10 @@
 
       //Copy To Clipboard
       document.getElementById('copy-button').addEventListener('click', async () => {
-        const copyText = document.getElementById("name-input");
-
-        copyText.select();
+        const copyText = document.getElementById("trans-output").innerText;
 
         try {
-          await navigator.clipboard.writeText(copyText.value);
+          await navigator.clipboard.writeText(copyText);
         } catch (error) {
           console.log(error);
         }
