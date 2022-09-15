@@ -66,7 +66,7 @@
       const nameElem = document.querySelector('#name-input');
       const output = document.querySelector('.name-output code');
       const replacements = { "ch": "tsch", "kh": "ch", "ks": "x", "zh": "sch", "sh": "sch", "tz": "z", "ts": "z", "v": "w", "z": "s", "shch": "schtsch" };
-      const patterns = { "y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j" };
+      const patterns = { "y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j$1" };
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
