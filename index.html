@@ -47,7 +47,7 @@
         </div>
         <div class="row layout justify-content-center">
           <div class="col-6 text-center">
-            <button type="button" class="btn btn-primary btn-name">Transliterate</button>
+            <button type="button" class="btn btn-primary" id="trans-button">Transliterate</button>
           </div>
         </div>
 
@@ -63,107 +63,106 @@
     </div>
   </div>
   <script>
+    const nameElem = document.querySelector('#name-input');
+    const output = document.querySelector('.name-output code');
+    const replacements = { "ch": "tsch", "kh": "ch", "ks": "x", "zh": "sch", "sh": "sch", "tz": "z", "ts": "z", "v": "w", "z": "s", "shch": "schtsch" };
+    const patterns = { "y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j$1" };
 
-    document.addEventListener("DOMContentLoaded", function (event) {
-      const button = document.querySelector('.btn-name');
-      const nameElem = document.querySelector('#name-input');
-      const output = document.querySelector('.name-output code');
-      const replacements = { "ch": "tsch", "kh": "ch", "ks": "x", "zh": "sch", "sh": "sch", "tz": "z", "ts": "z", "v": "w", "z": "s", "shch": "schtsch" };
-      const patterns = { "y$": "i", "y([aeiou])": "j$1", "([aeiou])s([aeiou])": "$1ss$2", "(i)(i)": "j", "i([aeiou])": "j$1" };
-
-      this.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          let name = nameElem.value;
-
-          let transcribedName = createString(name);
-          output.innerText = transcribedName;
-        }
-      })
-
-      button.addEventListener('click', function () {
+    ///EVENT LISTENERS///
+    //execute transliteration
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
         let name = nameElem.value;
 
         let transcribedName = createString(name);
         output.innerText = transcribedName;
-      })
+      }
+    })
 
-      function createString(string) {
+    document.getElementById('trans-button').addEventListener('click', function () {
+      let name = nameElem.value;
 
-        if (!string) {
-          alert("Bitte einen Text eingeben");
-          return ""
-        } else {
-          let name = string.toLowerCase();
-          let included = {}
+      let transcribedName = createString(name);
+      output.innerText = transcribedName;
+    })
 
-          for (const [key, val] of Object.entries(replacements)) {
-            if (name.includes(key)) included[key] = val;
-          }
+    //Copy To Clipboard
+    document.getElementById('copy-button').addEventListener('click', async () => {
+      const copyText = document.getElementById("trans-output").innerText;
 
-          for (const [key, value] of Object.entries(included)) {
-            const regex = new RegExp(key, 'g');
-            name = name.replace(regex, value);
-          }
+      try {
+        await navigator.clipboard.writeText(copyText);
+      } catch (error) {
+        console.log(error);
+      }
+    })
 
-          if (name.endsWith('ey')) {
-            name = name.replace(/ey$/m, 'ej');
-          }
+    /// FUNCTIONS /// 
+    function createString(string) {
 
-          for (const [key, value] of Object.entries(patterns)) {
-            const regex = new RegExp(key, 'g');
-            name = name.replace(regex, value);
-          };
+      if (!string) {
+        alert("Bitte einen Text eingeben");
+        return ""
+      } else {
+        let name = string.toLowerCase();
+        let included = {}
 
-          nameEnd = name.slice(1);
-          name = name[0].toUpperCase() + nameEnd;
-
-          return name;
+        for (const [key, val] of Object.entries(replacements)) {
+          if (name.includes(key)) included[key] = val;
         }
+
+        for (const [key, value] of Object.entries(included)) {
+          const regex = new RegExp(key, 'g');
+          name = name.replace(regex, value);
+        }
+
+        if (name.endsWith('ey')) {
+          name = name.replace(/ey$/m, 'ej');
+        }
+
+        for (const [key, value] of Object.entries(patterns)) {
+          const regex = new RegExp(key, 'g');
+          name = name.replace(regex, value);
+        };
+
+        nameEnd = name.slice(1);
+        name = name[0].toUpperCase() + nameEnd;
+
+        return name;
+      }
+    }
+
+    /// testing accurate transliteration results for test cases ///
+
+    function test_createString() {
+      //inputs based on transliteration table
+      const inputs = {
+        "Kuchma": "Kutschma",
+        "Khvastov": "Chwastow",
+        "Aleksander": "Alexander",
+        "Shoigu": "Schoigu",
+        "Yushchenko": "Juschtschenko",
+        "Yeltsin": "Jelzin",
+        "Filippov": "Filippow",
+        "Alexey": "Alexej",
+        "Yevgeny": "Jewgeni",
+        "Ilya": "Ilja",
+        "Chernobyl": "Tschernobyl",
+        "Kozyrev": "Kosyrew",
+        "Zhirinovsky": "Schirinowski",
+        "Zaporizhzhia": "Saporischschja"
       }
 
-      //Copy To Clipboard
-      document.getElementById('copy-button').addEventListener('click', async () => {
-        const copyText = document.getElementById("trans-output").innerText;
-
-        try {
-          await navigator.clipboard.writeText(copyText);
-        } catch (error) {
-          console.log(error);
-        }
-
-      })
-
-      /// testing accurate transliteration results for test cases ///
-
-      function test_createString() {
-        //inputs based on transliteration table
-        const inputs = {
-          "Kuchma": "Kutschma",
-          "Khvastov": "Chwastow",
-          "Aleksander": "Alexander",
-          "Shoigu": "Schoigu",
-          "Yushchenko": "Juschtschenko",
-          "Yeltsin": "Jelzin",
-          "Filippov": "Filippow",
-          "Alexey": "Alexej",
-          "Yevgeny": "Jewgeni",
-          "Ilya": "Ilja",
-          "Chernobyl": "Tschernobyl",
-          "Kozyrev": "Kosyrew",
-          "Zhirinovsky": "Schirinowski",
-          "Zaporizhzhia": "Saporischschja"
-        }
-
-        //will throw an assertion error in the console if createString() result does not match expected transliteration
-        for (const [key, value] of Object.entries(inputs)) {
-          const transliteration = createString(key);
-          console.assert(value === transliteration, `expected: ${value}, function result: ${transliteration}`);
-        }
-        console.log("transliteration test complete")
+      //will throw an assertion error in the console if createString() result does not match expected transliteration
+      for (const [key, value] of Object.entries(inputs)) {
+        const transliteration = createString(key);
+        console.assert(value === transliteration, `expected: ${value}, function result: ${transliteration}`);
       }
+      console.log("transliteration test complete")
+    }
 
-      test_createString()
-    });
+    test_createString()
+
 
 
   </script>
